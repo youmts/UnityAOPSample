@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using log4net;
 using Unity.Interception.ContainerIntegration;
 using Unity.Interception.InterceptionBehaviors;
 using Unity.Interception.PolicyInjection.Pipeline;
@@ -25,12 +26,14 @@ namespace UnityAOPSample
         /// <returns></returns>
         public IMethodReturn Invoke(IMethodInvocation input, GetNextInterceptionBehaviorDelegate getNext)
         {
-            Console.WriteLine($"# before: {input.MethodBase.Name}({string.Join(", ", input.Arguments.Cast<object>())})");
+            ILog log = LogManager.GetLogger(input.MethodBase.DeclaringType);
+
+            log.Info($"# -> {input.MethodBase.Name}({string.Join(", ", input.Arguments.Cast<object>())})");
             
             // この行でvirtualなメソッドが呼び出され、戻り値が返却される
             var result = getNext()(input, getNext);
 
-            Console.WriteLine($"# end: {input.MethodBase.Name}, result: {result.ReturnValue}");
+            log.Info($"# <- {input.MethodBase.Name}, result: {result.ReturnValue}");
 
             return result;
         }

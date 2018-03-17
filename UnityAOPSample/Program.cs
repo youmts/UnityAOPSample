@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 using Unity;
 using Unity.Interception.ContainerIntegration;
 using Unity.Interception.Interceptors.TypeInterceptors.VirtualMethodInterception;
@@ -11,8 +12,12 @@ namespace UnityAOPSample
 {
     class Program
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         static void Main(string[] args)
         {
+            Log.Info("Main start");
+
             using (var container = new UnityContainer())
             {
                 container.AddNewExtension<Interception>();
@@ -36,6 +41,8 @@ namespace UnityAOPSample
 
             Console.WriteLine("Please press enter key.");
             Console.ReadLine();
+
+            Log.Info("Main end");
         }
     }
 }
